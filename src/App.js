@@ -31,6 +31,9 @@ const App = () => {
   const [winner, setWinner] = useState(null);
   const [isPlayable, setIsPlayable] = useState(true);
 
+  const winSound = new Audio('/sound/win.wav');
+  const loseSound = new Audio('/sound/lose.wav');
+
   const hands = {
     rock: {
       beats: 'scissors',
@@ -53,13 +56,16 @@ const App = () => {
         setWinner('Player');
         setPlayerScore(playerScore + 1);
         setIsPlayable(false);
+        winSound.play();
       } else if (hands[computerHand].beats === playerHand) {
         setWinner('Computer');
         setComputerScore(computerScore + 1);
         setIsPlayable(false);
+        loseSound.play();
       } else {
         setWinner('tie');
         setIsPlayable(false);
+        winSound.play();
       }
     }
   }, [playerHand]);
