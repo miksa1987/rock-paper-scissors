@@ -29,26 +29,21 @@ const Div = styled.div`
   align-items: center;
 `;
 
-export const PlayerSection = ({ playHand, isPlayable }) => {
-  const [hand, setHand] = React.useState(null);
-
+export const PlayerSection = ({ hand, playHand, isPlayable }) => {
   const playRock = () => {
     if (isPlayable) {
-      setHand('rock');
       playHand('rock');
     }
   };
 
   const playPaper = () => {
     if (isPlayable) {
-      setHand('paper');
       playHand('paper');
     }
   };
 
   const playScissors = () => {
     if (isPlayable) {
-      setHand('scissors');
       playHand('scissors');
     }
   };

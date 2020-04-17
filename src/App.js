@@ -85,12 +85,17 @@ const App = () => {
     setIsPlayable(true);
   };
 
+  console.log(playerHand);
   return (
     <Layout>
       <Header>Rock Paper Scissors</Header>
       <PlayScreen>
         <ComputerSection hand={computerHand} played={computerPlayed} />
-        <PlayerSection isPlayable={isPlayable} playHand={playHand} />
+        <PlayerSection
+          isPlayable={isPlayable}
+          playHand={playHand}
+          hand={playerHand}
+        />
         <div className="placeholder" />
       </PlayScreen>
       <Footer playerScore={playerScore} computerScore={computerScore} />
