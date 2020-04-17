@@ -1,26 +1,104 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
-function App() {
+import { PlayScreen } from './playscreen/PlayScreen';
+import { PlayerSection } from './playscreen/PlayerSection';
+import { ComputerSection } from './playscreen/ComputerSection';
+
+import { Footer } from './footer/Footer';
+
+import { GameOverPopup } from './gameoverpopup/GameOverPopup';
+
+const Layout = styled.div`
+  display: grid;
+  grid-template: 2rem 1fr 3rem;
+`;
+
+const Header = styled.h1`
+  display: flex;
+  justify-content: center;
+  color: #f1fa8c;
+`;
+
+const App = () => {
+  const [playerHand, setPlayerHand] = useState(null);
+  const [playerScore, setPlayerScore] = useState(0);
+
+  const [computerHand, setComputerHand] = useState(null);
+  const [computerPlayed, setComputerPlayed] = useState(false);
+  const [computerScore, setComputerScore] = useState(0);
+
+  const [winner, setWinner] = useState(null);
+  const [isPlayable, setIsPlayable] = useState(true);
+
+  const hands = {
+    rock: {
+      beats: 'scissors',
+    },
+    paper: {
+      beats: 'rock',
+    },
+    scissors: {
+      beats: 'paper',
+    },
+  };
+
+  // TODO
+  // Gruvbox colors? Or dracula?
+  // TESTS
+
+  useEffect(() => {
+    if (playerHand && computerHand) {
+      if (hands[playerHand].beats === computerHand) {
+        setWinner('Player');
+        setPlayerScore(playerScore + 1);
+        setIsPlayable(false);
+      } else if (hands[computerHand].beats === playerHand) {
+        setWinner('Computer');
+        setComputerScore(computerScore + 1);
+        setIsPlayable(false);
+      } else {
+        setWinner('tie');
+        setIsPlayable(false);
+      }
+    }
+  }, [playerHand]);
+
+  const playHand = (hand) => {
+    setPlayerHand(hand);
+    playComputerHand();
+  };
+
+  const playComputerHand = () => {
+    const randomIndex = Math.floor(Math.random() * Object.keys(hands).length);
+    const possibleHands = Object.keys(hands);
+
+    setComputerHand(possibleHands[randomIndex]);
+    setComputerPlayed(true);
+  };
+
+  const resetGame = () => {
+    setComputerHand(null);
+    setPlayerHand(null);
+    setComputerPlayed(false);
+    setWinner(null);
+    setIsPlayable(true);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <Header>Rock Paper Scissors</Header>
+      <PlayScreen>
+        <ComputerSection hand={computerHand} played={computerPlayed} />
+        <PlayerSection isPlayable={isPlayable} playHand={playHand} />
+        <div className="placeholder" />
+      </PlayScreen>
+      <Footer playerScore={playerScore} computerScore={computerScore} />
+      {computerPlayed && (
+        <GameOverPopup winner={winner} resetGame={resetGame} />
+      )}
+    </Layout>
   );
-}
+};
 
 export default App;
